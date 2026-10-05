@@ -1,6 +1,6 @@
-# SALESTORM Frontend Workspace
+# Velora's Flash Forge Frontend Workspace
 
-This directory contains the isolated **Next.js 14 Frontend Application** for the SALESTORM Flash Sale Platform.
+This directory contains the isolated **Next.js 14 Frontend Application** for Velora's Flash Forge Platform.
 
 ## 🚀 Quick Start for Frontend Team
 

@@ -20,22 +20,22 @@
 ## 🖼️ System Architecture Diagrams
 
 ### 1. System Context Diagram (C4 Level 1)
-![System Context Diagram](diagrams/01_system_context_diagram.png)
+![System Context Diagram](public/diagrams/01_system_context_diagram.jpg)
 
 ### 2. High Level Architecture (HLD)
-![HLD Architecture](diagrams/02_hld_architecture.png)
+![HLD Architecture](public/diagrams/02_hld_architecture.jpg)
 
 ### 3. Container Architecture (C4 Level 2)
-![Container Architecture](diagrams/03_container_diagram.png)
+![Container Architecture](public/diagrams/03_container_diagram.jpg)
 
 ### 4. Component Architecture (C4 Level 3)
-![Component Architecture](diagrams/04_component_diagram.png)
+![Component Architecture](public/diagrams/04_component_diagram.jpg)
 
 ### 5. Deployment Infrastructure (AWS Kubernetes)
-![Deployment Infrastructure](diagrams/05_deployment_diagram.png)
+![Deployment Infrastructure](public/diagrams/05_deployment_diagram.jpg)
 
 ### 6. Relational Database ER Diagram
-![Database ER Diagram](diagrams/06_er_diagram.png)
+![Database ER Diagram](public/diagrams/06_er_diagram.jpg)
 
 ---
 

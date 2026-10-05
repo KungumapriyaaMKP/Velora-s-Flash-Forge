@@ -129,7 +129,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchStockState();
-    // Fetch Auth User
     fetch('/api/auth/me')
       .then((res) => res.json())
       .then((data) => {
@@ -283,9 +282,8 @@ export default function Dashboard() {
         if (payData.success) {
           setPurchaseStep('confirmed');
           setNotification({ message: `Payment Succeeded! Order Confirmed: ${payData.orderId}. Opening Scratch Card...`, type: 'success' });
-          setCart([]); // Clear cart
+          setCart([]);
           
-          // Trigger Gamified Scratch Card Modal!
           setTimeout(() => {
             setIsScratchModalOpen(true);
           }, 800);
@@ -375,7 +373,6 @@ export default function Dashboard() {
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-2 md:gap-3">
-            {/* Rewards Locker Icon */}
             <button
               onClick={() => setIsRewardsOpen(true)}
               className="p-2.5 rounded-xl bg-slate-900 border border-amber-500/30 text-amber-400 hover:bg-slate-800 transition-all relative"
@@ -389,7 +386,6 @@ export default function Dashboard() {
               )}
             </button>
 
-            {/* Wishlist Icon */}
             <button
               onClick={() => setIsWishlistOpen(true)}
               className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition-all relative"
@@ -403,7 +399,6 @@ export default function Dashboard() {
               )}
             </button>
 
-            {/* Cart Icon */}
             <button
               onClick={() => setIsCartOpen(true)}
               className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20 flex items-center gap-2 transition-all"
@@ -415,7 +410,6 @@ export default function Dashboard() {
               </span>
             </button>
 
-            {/* Auth / Account Link */}
             <a
               href="/auth"
               className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800 transition-all flex items-center gap-1.5 text-xs font-semibold"
@@ -424,7 +418,6 @@ export default function Dashboard() {
               <span className="hidden lg:inline">{currentUser ? currentUser.fullName || currentUser.email : 'Login / Auth'}</span>
             </a>
 
-            {/* Admin Console Link */}
             <a
               href="/admin"
               className="p-2.5 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 hover:bg-purple-500/30 transition-all flex items-center gap-1.5 text-xs font-semibold"
@@ -534,7 +527,6 @@ export default function Dashboard() {
 
             {/* Catalog Filter Controls Bar */}
             <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4">
-              {/* Category Pills */}
               <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
                 <span className="text-xs font-semibold text-slate-400 flex items-center gap-1 mr-1">
                   <Filter className="w-3.5 h-3.5" /> Category:
@@ -554,7 +546,6 @@ export default function Dashboard() {
                 ))}
               </div>
 
-              {/* Sort Dropdown & In-Stock Check */}
               <div className="flex items-center gap-4 text-xs">
                 <label className="flex items-center gap-2 text-slate-300 cursor-pointer">
                   <input
@@ -592,7 +583,6 @@ export default function Dashboard() {
                     className="bg-slate-900/90 border border-slate-800 hover:border-slate-700 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all"
                   >
                     <div>
-                      {/* Product Image & Badges */}
                       <div className="relative h-48 overflow-hidden bg-slate-950">
                         <img
                           src={product.image}
@@ -610,7 +600,6 @@ export default function Dashboard() {
                           )}
                         </div>
 
-                        {/* Wishlist Toggle Button */}
                         <button
                           onClick={() => toggleWishlist(product.id)}
                           className="absolute top-3 right-3 p-2 rounded-full bg-slate-950/80 backdrop-blur-md border border-slate-700 text-slate-300 hover:text-pink-500 transition-all"
@@ -619,7 +608,6 @@ export default function Dashboard() {
                         </button>
                       </div>
 
-                      {/* Card Content */}
                       <div className="p-5 space-y-3">
                         <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-1 text-amber-400 font-bold">
@@ -649,7 +637,6 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Card Actions */}
                     <div className="p-5 pt-0 flex gap-2">
                       <button
                         onClick={() => addToCart(product)}
@@ -698,7 +685,6 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Simulation Configuration Inputs */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-950/80 p-4 rounded-2xl border border-slate-800">
                 <div>
                   <label className="block text-xs font-semibold text-slate-400 mb-1">Total Inbound Requests</label>
@@ -729,7 +715,6 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Run Trigger */}
               <button
                 onClick={runSimulation}
                 disabled={isRunningSim}
@@ -739,7 +724,6 @@ export default function Dashboard() {
                 {isRunningSim ? 'Simulating 10,000 Concurrent Requests...' : 'Execute 10,000 Request Stress Benchmark'}
               </button>
 
-              {/* Benchmark Results Display */}
               {simResults && (
                 <div className="space-y-4 pt-4 border-t border-slate-800">
                   <div className="flex items-center justify-between">
@@ -879,11 +863,8 @@ export default function Dashboard() {
               )}
             </div>
 
-            {/* Cart Footer & Multi-Payment Section */}
             {cart.length > 0 && (
               <div className="space-y-4 pt-4 border-t border-slate-800">
-                
-                {/* Coupon Code Input */}
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -907,7 +888,6 @@ export default function Dashboard() {
                   </div>
                 )}
 
-                {/* Pricing Summary */}
                 <div className="space-y-1.5 text-xs text-slate-400 font-mono">
                   <div className="flex justify-between">
                     <span>Subtotal:</span>
@@ -929,7 +909,6 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Multi-Payment Method Strategy Selection */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-400 mb-2">Select Payment Strategy</label>
                   <div className="grid grid-cols-2 gap-2">
@@ -954,7 +933,6 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Checkout Trigger */}
                 <button
                   onClick={handleUserReservation}
                   disabled={isPurchasing}

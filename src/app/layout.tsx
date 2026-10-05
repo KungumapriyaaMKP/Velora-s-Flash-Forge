@@ -2,7 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'SALESTORM — High-Scale E-Commerce Flash Sale Platform',
+  title: "Velora's Flash Forge — High-Scale E-Commerce Flash Sale Platform",
   description: 'System Design Hackathon Blueprint & High-Concurrency Simulator (10,000 Users vs 100 Units)',
 };
 
