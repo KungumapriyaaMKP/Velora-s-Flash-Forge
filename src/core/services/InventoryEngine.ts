@@ -143,4 +143,28 @@ export class InventoryEngine {
     this.version += 1;
     return true;
   }
+
+  /**
+   * Restock units into available pool (Admin Operation)
+   */
+  public restock(productId?: string, quantity: number = 100): number {
+    this.availableQuantity += quantity;
+    this.version += 1;
+    return this.availableQuantity;
+  }
+
+  /**
+   * Purge / Release all expired reservations back to available stock
+   */
+  public releaseExpiredReservations(): number {
+    let count = 0;
+    const now = new Date().toISOString();
+    for (const res of this.reservations.values()) {
+      if (res.status === 'RESERVED' && res.expiresAt < now) {
+        this.releaseReservation(res.reservationId);
+        count++;
+      }
+    }
+    return count;
+  }
 }

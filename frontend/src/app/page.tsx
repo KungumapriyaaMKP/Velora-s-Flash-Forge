@@ -417,6 +417,14 @@ export default function Dashboard() {
               <UserIcon className="w-4 h-4 text-cyan-400" />
               <span className="hidden lg:inline">{currentUser ? currentUser.fullName || currentUser.email : 'Login / Auth'}</span>
             </a>
+
+            <a
+              href="/admin"
+              className="p-2.5 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 hover:bg-purple-500/30 transition-all flex items-center gap-1.5 text-xs font-semibold"
+            >
+              <ShieldCheck className="w-4 h-4 text-purple-400" />
+              <span className="hidden lg:inline">Admin Panel</span>
+            </a>
           </div>
         </div>
       </header>

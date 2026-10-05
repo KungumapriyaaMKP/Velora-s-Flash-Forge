@@ -37,6 +37,22 @@
   - `200 OK`: Returns current user details and role.
   - `401 Unauthorized`: Invalid or expired session token.
 
+### 1.0B Admin Operations & Telemetry Endpoints (`/api/admin/stock`)
+
+#### A. Fetch Stock Telemetry (`GET /api/admin/stock`)
+- **Responses**: `200 OK` returning `{ availableQuantity, reservedQuantity, soldQuantity, version }`.
+
+#### B. Emergency Restock & Reservation Release (`POST /api/admin/stock`)
+- **Request Body**:
+  ```json
+  { "action": "restock", "restockQuantity": 100 }
+  ```
+  or
+  ```json
+  { "action": "release_expired" }
+  ```
+- **Responses**: `200 OK` returning updated inventory telemetry and release counts.
+
 ### 1.1 Reserve Inventory Endpoint
 - **HTTP Method**: `POST`
 - **Endpoint**: `/api/v1/reservations`
