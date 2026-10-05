@@ -32,8 +32,8 @@ import {
   SlidersHorizontal
 } from 'lucide-react';
 
-import { Product, CouponReward } from '../../core/domain/storeTypes.js';
-import { SAMPLE_PRODUCTS } from '../../core/services/CatalogService.js';
+import { Product, CouponReward } from '../../core/domain/storeTypes';
+import { SAMPLE_PRODUCTS } from '../../core/services/CatalogService';
 
 interface AdminOrder {
   orderId: string;

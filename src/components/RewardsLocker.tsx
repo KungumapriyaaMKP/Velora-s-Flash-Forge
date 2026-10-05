@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Gift, Copy, Check, Sparkles, Tag, ArrowRight, X } from 'lucide-react';
-import { CouponReward } from '../core/domain/storeTypes.js';
+import { CouponReward } from '../core/domain/storeTypes';
 
 interface RewardsLockerProps {
   isOpen: boolean;

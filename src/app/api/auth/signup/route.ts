@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { AuthEngine } from '../../../../core/services/AuthEngine.js';
+import { AuthEngine } from '../../../../core/services/AuthEngine';
 
 export async function POST(request: Request) {
   try {

@@ -37,10 +37,10 @@ import {
   Check
 } from 'lucide-react';
 
-import { Product, CartItem, CouponReward, PaymentMethodType } from '../core/domain/storeTypes.js';
-import { SAMPLE_PRODUCTS, CatalogService } from '../core/services/CatalogService.js';
-import { ScratchCardModal } from '../components/ScratchCardModal.js';
-import { RewardsLocker } from '../components/RewardsLocker.js';
+import { Product, CartItem, CouponReward, PaymentMethodType } from '../core/domain/storeTypes';
+import { SAMPLE_PRODUCTS, CatalogService } from '../core/services/CatalogService';
+import { ScratchCardModal } from '../components/ScratchCardModal';
+import { RewardsLocker } from '../components/RewardsLocker';
 
 interface SimulationMetrics {
   totalRequests: number;

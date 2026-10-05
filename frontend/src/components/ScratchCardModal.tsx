@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Sparkles, Trophy, Gift, Copy, Check, X, ArrowRight } from 'lucide-react';
-import { CouponReward } from '../core/domain/storeTypes.js';
+import { CouponReward } from '../core/domain/storeTypes';
 
 interface ScratchCardModalProps {
   isOpen: boolean;

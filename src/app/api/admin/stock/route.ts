@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { InventoryEngine } from '../../../../core/services/InventoryEngine.js';
+import { InventoryEngine } from '../../../../core/services/InventoryEngine';
 
 export async function GET(request: Request) {
   try {

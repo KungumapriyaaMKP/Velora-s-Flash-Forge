@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { supabase } from '../../lib/supabaseClient.js';
-import { User, SignUpRequest, LoginRequest, AuthResponse, JWTPayload, UserRole } from '../domain/authTypes.js';
+import { supabase } from '../../lib/supabaseClient';
+import { User, SignUpRequest, LoginRequest, AuthResponse, JWTPayload, UserRole } from '../domain/authTypes';
 
 // In-Memory Database Fallback for offline / simulation environments
 const inMemoryUsersDB = new Map<string, {

@@ -1,4 +1,4 @@
-import { Product } from '../domain/storeTypes.js';
+import { Product } from '../domain/storeTypes';
 
 export const SAMPLE_PRODUCTS: Product[] = [
   {
