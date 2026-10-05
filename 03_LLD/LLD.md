@@ -1,6 +1,13 @@
-# SALESTORM — Stage 3: Low-Level Design (LLD) & Sequence Diagrams
+# Velora's Flash Forge — Stage 3: Low-Level Design (LLD) & Sequence Diagrams
+
+> **Project Name**: Velora's Flash Forge  
+> **Hackathon**: SALESTORM System Design Challenge 2026
+
+---
 
 ## 1. Object-Oriented Class Diagram (Core Domain Modules)
+
+![UML Class Diagram](../diagrams/07_class_diagram.svg)
 
 ```mermaid
 classDiagram
@@ -29,15 +36,6 @@ classDiagram
         +markExpired() void
     }
 
-    class ReservationStatus {
-        <<enumeration>>
-        RESERVED
-        PAYMENT_PENDING
-        CONFIRMED
-        RELEASED
-        EXPIRED
-    }
-
     class Order {
         +UUID orderId
         +UUID customerId
@@ -47,18 +45,6 @@ classDiagram
         +String idempotencyKey
         +transitionTo(nextStatus: OrderStatus) void
         +cancelOrder(reason: String) void
-    }
-
-    class OrderStatus {
-        <<enumeration>>
-        CREATED
-        PAYMENT_PENDING
-        CONFIRMED
-        PROCESSING
-        SHIPPED
-        OUT_FOR_DELIVERY
-        DELIVERED
-        CANCELLED
     }
 
     class PaymentTransaction {
@@ -71,15 +57,6 @@ classDiagram
         +String idempotencyKey
         +markSuccess(ref: String) void
         +markFailed(reason: String) void
-    }
-
-    class PaymentStatus {
-        <<enumeration>>
-        PENDING
-        SUCCESS
-        FAILED
-        TIMED_OUT
-        REFUNDED
     }
 
     interface IPaymentGatewayAdapter {
@@ -105,6 +82,8 @@ classDiagram
 ---
 
 ## 2. Sequence Diagram 1: Flash Sale Purchase & Reservation Flow
+
+![Purchase Sequence Diagram](../diagrams/08_purchase_sequence_diagram.svg)
 
 ```mermaid
 sequenceDiagram
@@ -133,6 +112,8 @@ sequenceDiagram
 ---
 
 ## 3. Sequence Diagram 2: Payment Processing & Safe Idempotency Flow
+
+![Payment Sequence Diagram](../diagrams/09_payment_sequence_diagram.svg)
 
 ```mermaid
 sequenceDiagram
@@ -176,7 +157,9 @@ sequenceDiagram
 
 ---
 
-## 4. Sequence Diagram 3: Asynchronous Order Creation & Downstream Outage Recovery (30s Outage Scenario)
+## 4. Sequence Diagram 3: Asynchronous Order Creation & Outage Recovery (30s Outage Scenario)
+
+![Order Sequence Diagram](../diagrams/10_order_sequence_diagram.svg)
 
 ```mermaid
 sequenceDiagram
@@ -200,17 +183,14 @@ sequenceDiagram
     OrderService->>DB: UPDATE inventory_reservations SET status='CONFIRMED'
     OrderService->>DB: COMMIT TRANSACTION
     OrderService->>EventBus: Publish Event: `order.created`
-    
-    note over Worker: Periodic Reconciliation (Every 1 Minute)
-    Worker->>DB: SELECT * FROM payments WHERE status='SUCCESS' AND order_id IS NULL AND created_at < NOW() - INTERVAL '2 min'
-    Worker->>OrderService: Trigger Manual Order Creation for any Orphaning
 ```
 
 ---
 
 ## 5. State Diagrams
 
-### 5.1 Reservation Lifecycle State Diagram
+![Order and Reservation State Diagram](../diagrams/11_state_diagram.svg)
+
 ```mermaid
 stateDiagram-v2
     [*] --> AVAILABLE
@@ -226,21 +206,4 @@ stateDiagram-v2
     RELEASED --> AVAILABLE : Stock returned to available pool
     EXPIRED --> AVAILABLE : Stock returned to available pool
     SOLD --> [*]
-```
-
-### 5.2 Order Lifecycle State Diagram
-```mermaid
-stateDiagram-v2
-    [*] --> CREATED
-    CREATED --> PAYMENT_PENDING : Checkout initialized
-    PAYMENT_PENDING --> CONFIRMED : Payment verified successfully
-    CONFIRMED --> PROCESSING : Warehouse picked & packed
-    PROCESSING --> SHIPPED : Handed to carrier (tracking assigned)
-    SHIPPED --> OUT_FOR_DELIVERY : Driver on route
-    OUT_FOR_DELIVERY --> DELIVERED : Package signed and confirmed
-    
-    PAYMENT_PENDING --> CANCELLED : Payment failed or timed out
-    CONFIRMED --> CANCELLED : Customer cancelled prior to shipping (triggers refund)
-    CANCELLED --> [*]
-    DELIVERED --> [*]
 ```

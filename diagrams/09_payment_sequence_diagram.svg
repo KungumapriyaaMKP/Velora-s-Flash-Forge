@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 650" width="1200" height="650">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="100%" stop-color="#111827" />
+    </linearGradient>
+    <linearGradient id="boxBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+  
+  <!-- Header Banner -->
+  <rect x="0" y="0" width="1200" height="80" fill="#0f172a"/>
+  <line x1="0" y1="80" x2="1200" y2="80" stroke="#06b6d4" stroke-width="3"/>
+  
+  <text x="30" y="38" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="22" font-weight="800" letter-spacing="1">VELORA'S FLASH FORGE</text>
+  <text x="30" y="62" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14" font-weight="600">DELIVERABLE 10: PAYMENT SEQUENCE DIAGRAM — Circuit Breaker Guard & Strategy Pattern Execution</text>
+  <text x="960" y="48" fill="#34d399" font-family="monospace" font-size="12" font-weight="bold">SALESTORM SYS DESIGN 2026</text>
+
+  <!-- Diagram Body -->
+  <g transform="translate(0, 40)">
+    
+  <text x="100" y="180" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="14" font-weight="bold">Customer</text>
+  <line x1="100" y1="195" x2="100" y2="580" stroke="#334155" stroke-dasharray="4 4"/>
+
+  <text x="400" y="180" text-anchor="middle" fill="#818cf8" font-family="sans-serif" font-size="14" font-weight="bold">SagaOrchestrator</text>
+  <line x1="400" y1="195" x2="400" y2="580" stroke="#334155" stroke-dasharray="4 4"/>
+
+  <text x="700" y="180" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="14" font-weight="bold">CircuitBreaker</text>
+  <line x1="700" y1="195" x2="700" y2="580" stroke="#334155" stroke-dasharray="4 4"/>
+
+  <text x="1000" y="180" text-anchor="middle" fill="#a78bfa" font-family="sans-serif" font-size="14" font-weight="bold">StripePaymentStrategy</text>
+  <line x1="1000" y1="195" x2="1000" y2="580" stroke="#334155" stroke-dasharray="4 4"/>
+
+  <path d="M 100 240 L 400 240" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="250" y="230" text-anchor="middle" fill="#cbd5e1" font-family="monospace" font-size="11">POST /api/checkout (reservationId)</text>
+
+  <path d="M 400 300 L 700 300" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="550" y="290" text-anchor="middle" fill="#cbd5e1" font-family="monospace" font-size="11">execute(processPayment)</text>
+
+  <path d="M 700 360 L 1000 360" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="850" y="350" text-anchor="middle" fill="#cbd5e1" font-family="monospace" font-size="11">processPayment(request)</text>
+
+  <path d="M 1000 420 L 400 420" stroke="#34d399" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrowGreen)"/>
+  <text x="700" y="410" text-anchor="middle" fill="#34d399" font-family="monospace" font-size="11">{ success: true, txnRef: 'str_txn_123' }</text>
+
+  <path d="M 400 480 L 100 480" stroke="#34d399" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrowGreen)"/>
+  <text x="250" y="470" text-anchor="middle" fill="#34d399" font-family="monospace" font-size="11">200 OK (Payment Verified, Order Confirmed)</text>
+  
+  </g>
+
+  <!-- Footer -->
+  <rect x="0" y="610" width="1200" height="40" fill="#090d16"/>
+  <line x1="0" y1="610" x2="1200" y2="610" stroke="#1e293b" stroke-width="1"/>
+  <text x="30" y="635" fill="#64748b" font-family="monospace" font-size="12">Velora's Flash Forge © 2026 • Enterprise System Blueprint • Crisp Vector Architecture Diagram</text>
+</svg>
