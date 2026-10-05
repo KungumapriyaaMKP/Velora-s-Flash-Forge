@@ -272,3 +272,42 @@ BEGIN
     RETURN v_count;
 END;
 $$;
+
+-- =============================================================================
+-- INITIAL SEED DATA FOR FLASH SALE PLATFORM
+-- =============================================================================
+
+-- 1. Insert Initial Category
+INSERT INTO categories (category_id, name, slug)
+VALUES ('11111111-1111-1111-1111-111111111111', 'Gaming & Hardware', 'gaming-hardware')
+ON CONFLICT (slug) DO NOTHING;
+
+-- 2. Insert Initial Product (Velora Flash Forge Founder's Edition)
+INSERT INTO products (product_id, category_id, name, description, price, sku)
+VALUES (
+    '22222222-2222-2222-2222-222222222222',
+    '11111111-1111-1111-1111-111111111111',
+    'Velora Flash Forge Founder''s Edition VR-900',
+    'Enterprise high-scale flash sale flagship edition with ultra-low latency quantum graphics.',
+    499.99,
+    'SKU-VELORA-VR900'
+) ON CONFLICT (sku) DO NOTHING;
+
+-- 3. Insert Initial Inventory (100 Available Units)
+INSERT INTO inventory (inventory_id, product_id, available_quantity, reserved_quantity, sold_quantity, version)
+VALUES (
+    '33333333-3333-3333-3333-333333333333',
+    '22222222-2222-2222-2222-222222222222',
+    100,
+    0,
+    0,
+    1
+) ON CONFLICT (product_id) DO NOTHING;
+
+-- 4. Insert Default Promotion Coupons
+INSERT INTO sales_promotions (code, discount_percent, active)
+VALUES 
+    ('FLASHFORGE50', 50.00, TRUE),
+    ('LUCKY25', 25.00, TRUE),
+    ('VIP100', 100.00, TRUE)
+ON CONFLICT (code) DO NOTHING;
