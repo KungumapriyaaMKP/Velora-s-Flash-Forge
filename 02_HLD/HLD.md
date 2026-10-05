@@ -1,17 +1,24 @@
-# SALESTORM — Stage 2: High-Level System Architecture (HLD)
+# Velora's Flash Forge — Stage 2: High-Level System Architecture (HLD)
+
+> **Project Name**: Velora's Flash Forge  
+> **Hackathon**: SALESTORM System Design Challenge 2026
+
+---
 
 ## 1. System Context Diagram (C4 Level 1)
 
-The System Context Diagram shows how customers interact with the SALESTORM platform and external 3rd-party services (Payment Gateway, Logistics Partner, Notification Providers).
+The System Context Diagram shows how customers interact with **Velora's Flash Forge** and external 3rd-party services (Stripe Payment Gateway, FedEx Logistics, Twilio Notifications).
+
+![System Context Diagram](../diagrams/01_system_context_diagram.jpg)
 
 ```mermaid
 graph TD
     User["Customer / Mobile App / Web Client"]
     CDN["Cloudflare CDN & WAF"]
     LB["API Gateway & Load Balancer"]
-    SaleSystem["SALESTORM Platform (Core Systems)"]
+    SaleSystem["Velora's Flash Forge Platform"]
     PaymentGateway["External Payment Provider (Stripe / PayPal API)"]
-    LogisticsProvider["Logistics & Fulfillment Partner (FedEx / DHL API)"]
+    LogisticsProvider["Logistics Partner (FedEx / DHL API)"]
     NotificationGW["Notification Gateway (Twilio / SendGrid)"]
 
     User -->|1. Browse / Buy Request| CDN
@@ -26,6 +33,10 @@ graph TD
 
 ## 2. Container / Service Architecture (C4 Level 2)
 
+![HLD System Architecture](../diagrams/02_hld_architecture.jpg)
+
+![C4 Container Architecture](../diagrams/03_container_diagram.jpg)
+
 ```mermaid
 graph TB
     subgraph Client Layer
@@ -33,11 +44,11 @@ graph TB
     end
 
     subgraph Edge & Security Layer
-        WAF["WAF & Cloudflare CDN"]
-        Gateway["Kong / Envoy API Gateway (Rate Limiter & Auth)"]
+        WAF["Cloudflare WAF & Edge Rate Limiter"]
+        Gateway["Kong API Gateway (Auth & Token Bucket)"]
     end
 
-    subgraph Core Application Microservices
+    subgraph Core Microservices
         ProductService["Product Catalogue Service"]
         CartService["Cart Service"]
         InventoryService["Inventory & Reservation Service"]
@@ -45,19 +56,16 @@ graph TB
         PaymentService["Payment Processing Service"]
         OrderService["Order Management Service"]
         FulfillmentService["Fulfillment & Shipment Service"]
-        NotificationService["Notification Service"]
     end
 
-    subgraph Messaging & Storage Layer
-        RedisCache[("Redis Cluster (Stock Cache & Distributed Locks)")]
-        KafkaQueue[("Apache Kafka / RabbitMQ (Event Stream & DLQ)")]
-        MainDB[("Supabase PostgreSQL (Primary DB + Atomic RPCs)")]
+    subgraph Storage & Messaging Layer
+        RedisCache[("Redis Cluster (Stock Cache & Lua Pre-Lock)")]
+        KafkaQueue[("Apache Kafka (Event Bus & DLQ)")]
+        MainDB[("Supabase PostgreSQL (Primary DB + Stored Procedures)")]
     end
 
     WebClient --> WAF
     WAF --> Gateway
-    Gateway --> ProductService
-    Gateway --> CartService
     Gateway --> InventoryService
     Gateway --> CheckoutService
 
@@ -71,15 +79,16 @@ graph TB
     OrderService <--> MainDB
 
     CheckoutService -->|Publish Events| KafkaQueue
-    PaymentService -->|Payment Succeeded/Failed| KafkaQueue
+    PaymentService -->|Payment Events| KafkaQueue
     KafkaQueue --> OrderService
     KafkaQueue --> FulfillmentService
-    KafkaQueue --> NotificationService
 ```
 
 ---
 
 ## 3. Component Diagram for Critical Services (C4 Level 3)
+
+![Microservices Component Architecture](../diagrams/04_component_diagram.jpg)
 
 ### 3.1 Inventory & Reservation Service Internal Components
 ```mermaid
@@ -89,7 +98,7 @@ graph LR
         IdempotencyInterceptor["Idempotency Interceptor"]
         RateLimiter["Token Bucket Rate Limiter"]
         LockManager["Redis Redlock Manager"]
-        AtomicExecutor["Atomic DB Execution Engine (Postgres RPC)"]
+        AtomicExecutor["Atomic DB Engine (reserve_inventory_atomic)"]
         ExpiryScheduler["Reservation Expiry Worker"]
     end
 
@@ -100,88 +109,21 @@ graph LR
     ExpiryScheduler --> AtomicExecutor
 ```
 
-### 3.2 Payment Processing Service Internal Components
-```mermaid
-graph LR
-    subgraph PaymentService
-        PaymentController["Payment API Controller"]
-        IdempotencyStore["Payment Idempotency Manager"]
-        CircuitBreaker["Resilience4j / Hystrix Circuit Breaker"]
-        PaymentStrategyFactory["Payment Provider Strategy Factory"]
-        StripeAdapter["Stripe Adapter"]
-        PayPalAdapter["PayPal Adapter"]
-        AuditLogger["Payment Transaction Audit Logger"]
-    end
+---
 
-    PaymentController --> IdempotencyStore
-    IdempotencyStore --> CircuitBreaker
-    CircuitBreaker --> PaymentStrategyFactory
-    PaymentStrategyFactory --> StripeAdapter
-    PaymentStrategyFactory --> PayPalAdapter
-    StripeAdapter --> AuditLogger
-    PayPalAdapter --> AuditLogger
-```
+## 4. Deployment Diagram (AWS Kubernetes Infrastructure)
+
+![Kubernetes Deployment Infrastructure](../diagrams/05_deployment_diagram.jpg)
 
 ---
 
-## 4. Deployment Diagram (Kubernetes Multi-AZ Infrastructure)
+## 5. High-Performance Tech Stack Rationale for Judges
 
-```mermaid
-graph TD
-    subgraph AWS Cloud Region (us-east-1)
-        subgraph Availability Zone A
-            IngressA["Ingress Controller Pod"]
-            InventoryPodA["Inventory Service Pod"]
-            PaymentPodA["Payment Service Pod"]
-            OrderPodA["Order Service Pod"]
-            RedisMaster["Redis Primary Node"]
-        end
-
-        subgraph Availability Zone B
-            IngressB["Ingress Controller Pod"]
-            InventoryPodB["Inventory Service Pod"]
-            PaymentPodB["Payment Service Pod"]
-            OrderPodB["Order Service Pod"]
-            RedisReplica["Redis Replica Node"]
-        end
-
-        subgraph Managed DB Layer (Supabase / AWS RDS)
-            PostgresPrimary[("PostgreSQL Primary (Read/Write)")]
-            PostgresReplica[("PostgreSQL Read Replica")]
-        end
-    end
-
-    IngressA --> InventoryPodA
-    IngressB --> InventoryPodB
-    InventoryPodA --> RedisMaster
-    InventoryPodB --> RedisReplica
-    InventoryPodA --> PostgresPrimary
-    InventoryPodB --> PostgresReplica
-    PostgresPrimary -.->|Async Replication| PostgresReplica
-```
-
----
-
-## 5. Synchronous vs. Asynchronous Communication Matrix
-
-| Interaction | Mode | Protocol | Rationale |
-| :--- | :--- | :--- | :--- |
-| **User $\rightarrow$ Inventory Reservation** | Synchronous | REST / gRPC | User requires instant feedback on whether unit is reserved ($<100\text{ms}$). |
-| **Checkout $\rightarrow$ Payment Processing** | Synchronous | REST / HTTPS | Real-time payment card validation & authorization requirement. |
-| **Payment Success $\rightarrow$ Order Creation** | Asynchronous | Kafka Event (`payment.succeeded`) | Decouples Payment Service from potential Order Service outages (e.g. 30s crash recovery). |
-| **Order Confirmed $\rightarrow$ Fulfillment** | Asynchronous | RabbitMQ Queue | Warehouse picking and packaging operation is non-blocking. |
-| **Order Lifecycle $\rightarrow$ Notifications** | Asynchronous | Kafka / EventBridge | Email/SMS notifications should never block core transactional workflows. |
-
----
-
-## 6. Bottleneck Identification & Infrastructure Justification
-
-1. **DB Row Contention on Single Flash Sale Item**:
-   - *Problem*: 10,000 threads trying to `UPDATE inventory SET available_quantity = available_quantity - 1 WHERE product_id = X` creates massive DB transaction lock wait timeouts.
-   - *Mitigation*: Redis Lua script atomic pre-reservation + PostgreSQL stored procedure using `SELECT ... FOR UPDATE SKIP LOCKED` or optimistic versioning.
-2. **Payment Gateway Latency & Failures**:
-   - *Problem*: External payment APIs take 1-3 seconds to respond and may fail or timeout.
-   - *Mitigation*: Circuit Breaker pattern (isolates failing gateway) + Async Reconciliation Worker + Idempotency Tokens.
-3. **Thundering Herd Problem at Sale Launch**:
-   - *Problem*: Exact 09:00 AM traffic burst.
-   - *Mitigation*: Cloudflare WAF Queue-it virtual waiting room + Token Bucket rate limiting at API Gateway.
+1. **Why Cloudflare WAF + Kong API Gateway?**  
+   Drops DDoS attacks and enforces rate limits at global edge locations before traffic hits backend application servers.
+2. **Why Redis Cluster with Atomic Lua Scripts?**  
+   Pre-checks stock in RAM ($<1\text{ms}$). Deducts stock for 100 winners and polite-rejects 9,900 losers without causing DB transaction lock contention.
+3. **Why Supabase PostgreSQL + PgBouncer?**  
+   ACID compliance guaranteed via engine-level row locks (`SELECT FOR UPDATE`) and `reserve_inventory_atomic` stored procedure. PgBouncer handles connection pooling under 10k surges.
+4. **Why Apache Kafka for Event Bus?**  
+   Sustains $>1\text{M}$ msg/sec throughput. Buffers order creation events safely during 30-second downstream Order Service outages.

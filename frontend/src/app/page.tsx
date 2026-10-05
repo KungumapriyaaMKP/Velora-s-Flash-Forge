@@ -13,7 +13,9 @@ import {
   Activity, 
   Layers, 
   Lock, 
-  Play
+  Play,
+  Server,
+  ShieldCheck
 } from 'lucide-react';
 
 interface SimulationMetrics {
@@ -33,7 +35,7 @@ interface SimulationMetrics {
 }
 
 export default function FrontendDashboard() {
-  const [activeTab, setActiveTab] = useState<'storefront' | 'simulator' | 'design' | 'database'>('storefront');
+  const [activeTab, setActiveTab] = useState<'storefront' | 'simulator' | 'design' | 'stack' | 'database'>('storefront');
   
   // Stock State
   const [stockState, setStockState] = useState({
@@ -62,8 +64,8 @@ export default function FrontendDashboard() {
   const [simProgress, setSimProgress] = useState(0);
   const [simResults, setSimResults] = useState<SimulationMetrics | null>(null);
 
-  // Active Design Document view
-  const [selectedDoc, setSelectedDoc] = useState<'HLD' | 'LLD' | 'DATABASE' | 'SOLID' | 'PATTERNS' | 'SCALABILITY' | 'ADR' | 'PITCH'>('HLD');
+  // Active Design Diagram view
+  const [selectedDiagram, setSelectedDiagram] = useState<string>('01_system_context_diagram.jpg');
 
   useEffect(() => {
     fetchStockState();
@@ -210,12 +212,12 @@ export default function FrontendDashboard() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-white">SALESTORM FRONTEND</h1>
+                <h1 className="text-xl font-bold tracking-tight text-white">Velora's Flash Forge</h1>
                 <span className="text-xs px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono border border-cyan-500/30">
-                  DEVELOPER WORKSPACE
+                  SYS DESIGN 2026
                 </span>
               </div>
-              <p className="text-xs text-slate-400">Isolated Frontend Workspace for SALESTORM Flash Sale Platform</p>
+              <p className="text-xs text-slate-400">High-Scale Flash Sale Architecture (10,000 Users vs 100 Units)</p>
             </div>
           </div>
 
@@ -270,7 +272,19 @@ export default function FrontendDashboard() {
             }`}
           >
             <Layers className="w-4 h-4" />
-            System Design Specs
+            Architecture Diagrams
+          </button>
+
+          <button
+            onClick={() => setActiveTab('stack')}
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
+              activeTab === 'stack'
+                ? 'border-cyan-400 text-cyan-400 bg-cyan-500/10'
+                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+            }`}
+          >
+            <Server className="w-4 h-4" />
+            Tech Stack Defense
           </button>
 
           <button
@@ -299,7 +313,7 @@ export default function FrontendDashboard() {
                   <span className="inline-block w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
                   FLASH SALE LIVE NOW • LIMITED QUANTITY
                 </div>
-                <h2 className="text-2xl font-bold text-white">SALESTORM Ultra Flash Phone X</h2>
+                <h2 className="text-2xl font-bold text-white">Velora's Flash Forge Flagship Phone X</h2>
                 <p className="text-slate-300 max-w-2xl text-sm">
                   10,000 customers currently competing for only 100 available units. Engineered with atomic PostgreSQL stored procedures and Redis Lua pre-locking to ensure zero overselling.
                 </p>
@@ -332,7 +346,7 @@ export default function FrontendDashboard() {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-white">SALESTORM Ultra Flash Phone X</h3>
+                    <h3 className="text-lg font-bold text-white">Velora's Flash Forge Flagship Phone X</h3>
                     <p className="text-xs text-slate-400 mt-1">
                       Snapdragon 8 Gen 3, 16GB RAM, 100 Available Units Total
                     </p>
@@ -631,10 +645,138 @@ export default function FrontendDashboard() {
           </div>
         )}
 
+        {/* TAB 3: ARCHITECTURE DIAGRAMS */}
+        {activeTab === 'design' && (
+          <div className="space-y-6">
+            <div className="flex space-x-2 border-b border-slate-800 pb-3 overflow-x-auto">
+              {[
+                { id: '01_system_context_diagram.jpg', label: '01. System Context Diagram' },
+                { id: '02_hld_architecture.jpg', label: '02. HLD Architecture' },
+                { id: '03_container_diagram.jpg', label: '03. Container Diagram' },
+                { id: '04_component_diagram.jpg', label: '04. Component Diagram' },
+                { id: '05_deployment_diagram.jpg', label: '05. Deployment Diagram' },
+                { id: '06_er_diagram.jpg', label: '06. Database ER Diagram' },
+              ].map(diag => (
+                <button
+                  key={diag.id}
+                  onClick={() => setSelectedDiagram(diag.id)}
+                  className={`px-3 py-1.5 text-xs font-mono rounded transition-all whitespace-nowrap ${
+                    selectedDiagram === diag.id
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
+                      : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                  }`}
+                >
+                  {diag.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-center overflow-hidden">
+              <img 
+                src={`/diagrams/${selectedDiagram}`}
+                alt="System Architecture Diagram"
+                className="max-w-full h-auto rounded-lg shadow-2xl border border-slate-800"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: TECH STACK DEFENSE */}
+        {activeTab === 'stack' && (
+          <div className="space-y-6 font-mono text-xs">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-cyan-400" />
+                  High-Performance Tech Stack Rationale for Jury Defense
+                </h2>
+              </div>
+
+              <div className="space-y-4 text-slate-300">
+                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-2">
+                  <span className="font-bold text-cyan-400 text-sm">1. Edge Protection: Cloudflare WAF + Kong Gateway</span>
+                  <p className="text-slate-400">Absorbs Layer-7 DDoS traffic at global edge servers. Enforces Token Bucket rate limits (5 req/min per user) before requests reach backend application pods.</p>
+                </div>
+
+                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-2">
+                  <span className="font-bold text-cyan-400 text-sm">2. In-Memory Concurrency: Redis Cluster (Atomic Lua Scripts)</span>
+                  <p className="text-slate-400">Pre-checks stock availability in RAM (&lt;1ms). Deducts stock for 100 winners and polite-rejects 9,900 losers without causing RDBMS connection pool crashes.</p>
+                </div>
+
+                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-2">
+                  <span className="font-bold text-cyan-400 text-sm">3. Persistent Database: Supabase PostgreSQL + PgBouncer</span>
+                  <p className="text-slate-400">Guarantees engine-level ACID locks (`SELECT FOR UPDATE`) and `reserve_inventory_atomic` stored procedures. PgBouncer pools 10k connections down to 50 active DB sockets.</p>
+                </div>
+
+                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-2">
+                  <span className="font-bold text-cyan-400 text-sm">4. Event Stream Broker: Apache Kafka</span>
+                  <p className="text-slate-400">Sustains &gt;1M msg/sec throughput. Decouples payment authorization from order fulfillment, safely buffering events during 30s downstream service outages.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: DATABASE TELEMETRY */}
+        {activeTab === 'database' && (
+          <div className="space-y-6 font-mono text-xs">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                  <Database className="w-5 h-5 text-cyan-400" />
+                  Supabase PostgreSQL Schema & Atomic Stored Procedures
+                </h2>
+              </div>
+
+              <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 text-slate-300 overflow-x-auto">
+                <pre className="text-[11px] leading-relaxed text-cyan-300 font-mono">
+{`-- SUPABASE ATOMIC RESERVATION STORED PROCEDURE
+CREATE OR REPLACE FUNCTION reserve_inventory_atomic(
+    p_product_id UUID,
+    p_customer_id UUID,
+    p_quantity INT,
+    p_idempotency_key VARCHAR(128),
+    p_ttl_minutes INT DEFAULT 15
+) RETURNS JSONB LANGUAGE plpgsql AS $$
+DECLARE
+    v_inventory_id UUID;
+    v_available INT;
+    v_reservation_id UUID;
+BEGIN
+    SELECT inventory_id, available_quantity 
+    INTO v_inventory_id, v_available
+    FROM inventory WHERE product_id = p_product_id FOR UPDATE;
+
+    IF v_available < p_quantity THEN
+        RETURN jsonb_build_object('success', false, 'error', 'OUT_OF_STOCK');
+    END IF;
+
+    UPDATE inventory
+    SET available_quantity = available_quantity - p_quantity,
+        reserved_quantity = reserved_quantity + p_quantity,
+        version = version + 1
+    WHERE inventory_id = v_inventory_id;
+
+    INSERT INTO inventory_reservations (
+        inventory_id, customer_id, product_id, quantity, status, expires_at, idempotency_key
+    ) VALUES (
+        v_inventory_id, p_customer_id, p_product_id, p_quantity, 'RESERVED',
+        NOW() + (p_ttl_minutes || ' minutes')::INTERVAL, p_idempotency_key
+    ) RETURNING reservation_id INTO v_reservation_id;
+
+    RETURN jsonb_build_object('success', true, 'reservation_id', v_reservation_id);
+END;
+$$;`}
+                </pre>
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
 
       <footer className="border-t border-slate-800 bg-slate-900/60 py-4 px-6 text-center text-xs text-slate-500 font-mono">
-        SALESTORM System Design Hackathon • Dedicated Frontend Workspace
+        Velora's Flash Forge • System Design Hackathon 2026
       </footer>
     </div>
   );

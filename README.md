@@ -1,14 +1,15 @@
-# SALESTORM — High-Scale E-Commerce Flash Sale System Design & Application
+# ⚡ Velora's Flash Forge — High-Scale E-Commerce Flash Sale Architecture
 
-> **SYSTEM DESIGN HACKATHON | SYSCRAFTERS 2026**
-> **Company Use Case**: SALESTORM Flash Sale Platform
+> **SYSTEM DESIGN HACKATHON | SYSCRAFTERS 2026**  
+> **Official Project Name**: Velora's Flash Forge  
+> **Company Use Case**: High-Volume Flash Sale Platform  
 > **Challenge**: 10,000 Concurrent Purchase Requests for 100 Available Units. Zero Overselling. 100% Reliable Transactions.
 
 ---
 
 ## ⚡ Executive Summary
 
-**SALESTORM** is an enterprise-grade system architecture and full-stack interactive prototype built to handle extreme traffic spikes, limited-inventory contention, idempotent payment processing, and resilient order fulfillment workflows.
+**Velora's Flash Forge** is an enterprise-grade system architecture and full-stack interactive prototype built to handle extreme traffic spikes, limited-inventory contention, idempotent payment processing, and resilient order fulfillment workflows.
 
 - **Primary Database**: Supabase PostgreSQL (`dqzqbplwdmlfybqtgoqu.supabase.co`) with Row Level Security, Indexes, and Atomic Stored Procedures (`reserve_inventory_atomic`).
 - **Core Architecture**: Clean Domain-Driven Design (DDD) with SOLID Principles, Strategy, State, Factory, Observer, Adapter, Repository, and Circuit Breaker patterns.
@@ -16,12 +17,45 @@
 
 ---
 
+## 🖼️ System Architecture Diagrams
+
+### 1. System Context Diagram (C4 Level 1)
+![System Context Diagram](diagrams/01_system_context_diagram.jpg)
+
+### 2. High Level Architecture (HLD)
+![HLD Architecture](diagrams/02_hld_architecture.jpg)
+
+### 3. Container Architecture (C4 Level 2)
+![Container Architecture](diagrams/03_container_diagram.jpg)
+
+### 4. Component Architecture (C4 Level 3)
+![Component Architecture](diagrams/04_component_diagram.jpg)
+
+### 5. Deployment Infrastructure (AWS Kubernetes)
+![Deployment Infrastructure](diagrams/05_deployment_diagram.jpg)
+
+### 6. Relational Database ER Diagram
+![Database ER Diagram](diagrams/06_er_diagram.jpg)
+
+---
+
+## 🛠️ High-Performance Tech Stack Rationale for Judges
+
+| Tier / Component | Technology | Rationale for Maximum Performance | Alternatives Rejected & Why |
+| :--- | :--- | :--- | :--- |
+| **Edge Security** | **Cloudflare WAF + Rate Limiter** | Absorbs Layer-7 DDoS traffic at edge locations globally. Drops bot bursts before reaching API servers. | Bare Nginx (Vulnerable to distributed botnet saturation). |
+| **Cache & Concurrency** | **Redis Cluster (Lua Scripts)** | **Atomic In-Memory Execution ($<1\text{ms}$)**: Single-threaded execution guarantees zero race conditions in RAM. | Memcached (Lacks atomic Lua execution logic). |
+| **Primary Database** | **Supabase PostgreSQL + PgBouncer** | **ACID Engine Locks & Connection Pooling**: PgBouncer pools 10,000 incoming connections down to 50 active DB sockets, eliminating connection exhaustion. | MongoDB / MySQL (Lack engine-level PL/pgSQL atomic RPCs with row locks under high write lock contention). |
+| **Message Broker** | **Apache Kafka** | **High Throughput Log ($>1\text{M}$ msg/sec)**: Sequential disk append logs provide durable event buffering during 30s service outages. | RabbitMQ (Higher overhead per message when queue length spikes to 100k+). |
+| **Resilience Layer** | **Circuit Breaker (Resilience4j)** | Prevents thread pool starvation when external 3rd-party payment APIs (Stripe/PayPal) experience latency. | Raw HTTP Client (Hangs worker threads during payment gateway downtime). |
+| **Frontend Platform** | **Next.js 14 App Router + Tailwind** | SSG pre-renders product landing pages to static CDN HTML; App Router API routes execute serverless reservation handshakes. | Legacy Client-Side SPA (Slow initial page load during flash sale start). |
+
+---
+
 ## 📁 Repository & Submission Folder Structure
 
-The repository adheres strictly to the required hackathon deliverables structure (Section 15, Page 18):
-
 ```
-SALESTORM/
+Velora-s-Flash-Forge/
 ├── 01_Requirements/               # Business context, NFRs, assumptions, guarantees
 │   └── REQUIREMENTS.md
 ├── 02_HLD/                        # System Context, Container, Component, Deployment diagrams
@@ -41,72 +75,31 @@ SALESTORM/
 │   └── SCALABILITY_RELIABILITY.md
 ├── 09_Security_Observability/     # JWT Auth, WAF, Token Bucket, Structured Logging, Metrics, Tracing
 │   └── SECURITY_OBSERVABILITY.md
-├── 10_ADR/                        # Architecture Decision Records (ADR-001 to ADR-004)
+├── 10_ADR/                        # Architecture Decision Records (ADR-001 to ADR-005)
 │   └── ADR.md
 ├── 11_AI_Assisted_Validation/     # 10,000 Request Concurrency Simulation Report & Proofs
 │   └── SIMULATION.md
 ├── 12_Presentation/               # 5-Minute Pitch Deck Outline & Jury Defense Q&A
 │   └── PITCH.md
-├── src/                           # Full-Stack Application Codebase (Next.js 14 + Tailwind + Supabase)
+├── diagrams/                      # High-resolution JPEG Architecture Diagram Images
+├── frontend/                      # Dedicated Isolated Frontend Workspace (Next.js 14)
 ├── package.json
 └── README.md
 ```
 
 ---
 
-## 🚀 Key Architectural Highlights
+## 🚀 Running the Project
 
-### 1. Concurrency & Oversell Prevention
-- **Redis Lua Script Pre-Check**: Absorbs $9,900$ out-of-stock requests in RAM in $<2\text{ms}$.
-- **Supabase Atomic RPC**: Executes `reserve_inventory_atomic` stored procedure inside a PostgreSQL transaction block, preventing race conditions and guaranteeing `available_quantity >= 0`.
-
-### 2. Payment & Idempotency Safeguards
-- **Idempotency Interceptor**: Intercepts requests with `X-Idempotency-Key` header.
-- **Circuit Breaker**: Protects external payment gateway calls from cascading outages.
-- **Saga Compensation**: 5% simulated payment failures automatically trigger stock release back to the available pool.
-
-### 3. Order Lifecycle Resilience
-- **Event-Driven Saga**: Payment emits `payment.succeeded` event to Kafka broker. Order Service consumes events asynchronously, surviving 30-second downstream outages with 0 lost orders.
-
----
-
-## 💻 Full-Stack Interactive Web Application & Simulator
-
-The codebase includes an interactive Next.js application that serves as:
-1. **Live Flash Sale Storefront**: Interactive UI for Product X (100 units initial stock), live stock counter, reservation countdown, and buy now modal.
-2. **10,000 Request Concurrency Simulator**: Real-time stress test engine demonstrating 10,000 concurrent purchase attempts, visualizing latency distribution, zero oversell verification, and 100% idempotency intercept rate.
-3. **System Design & Blueprint Viewer**: Embedded renderer for all 12 Markdown specifications and Mermaid diagrams.
-4. **Database Visualizer**: SQL DDL & Supabase RPC Inspector.
-
-### Running the Application
-
+### 1. Run 10,000 Request Concurrency Stress Test (CLI)
 ```bash
-# Install Dependencies
-npm install
-
-# Run Development Server
-npm run dev
-
-# Run Concurrency Load Test Simulation (Terminal CLI)
 npm run test:load
 ```
 
----
-
-## 🛡️ Hackathon Evaluation Compliance
-
-| Evaluation Area | Weight | Compliance Summary |
-| :--- | :--- | :--- |
-| **Business & Requirements** | 10% | Fully covered in `01_Requirements/REQUIREMENTS.md` |
-| **HLD & Boundaries** | 15% | C4 Diagrams & Boundaries in `02_HLD/HLD.md` |
-| **Concurrency & Scalability** | 15% | Hybrid Redis + Postgres RPC in `08_Scalability_Reliability/SCALABILITY_RELIABILITY.md` |
-| **Inventory Consistency** | 15% | Stored Procedure & Expiry Release in `04_Database/schema.sql` |
-| **Payment & Order Design** | 10% | Sequence & Saga Diagrams in `03_LLD/LLD.md` |
-| **LLD & SOLID Patterns** | 15% | Class Diagrams & Patterns in `06_SOLID/SOLID.md` & `07_Design_Patterns/PATTERNS.md` |
-| **Database & API Design** | 10% | ERD, Indexes, REST/Kafka Specs in `04_Database` & `05_API` |
-| **Reliability & Security** | 5% | Circuit Breaker, Token Bucket, WAF in `09_Security_Observability` |
-| **ADR & Trade-offs** | 5% | ADR-001 to ADR-004 in `10_ADR/ADR.md` |
-
----
-
-*Engineered with precision for SALESTORM System Design Hackathon 2026.*
+### 2. Start Frontend Application
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Open **http://localhost:3000** to test the interactive storefront and concurrency simulator!
