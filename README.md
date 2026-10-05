@@ -17,25 +17,40 @@
 
 ---
 
-## 🖼️ System Architecture Diagrams
+## 🖼️ System Architecture & UML Diagrams
 
 ### 1. System Context Diagram (C4 Level 1)
-![System Context Diagram](public/diagrams/01_system_context_diagram.jpg)
+![System Context Diagram](diagrams/01_system_context_diagram.png)
 
 ### 2. High Level Architecture (HLD)
-![HLD Architecture](public/diagrams/02_hld_architecture.jpg)
+![HLD Architecture](diagrams/02_hld_architecture.png)
 
 ### 3. Container Architecture (C4 Level 2)
-![Container Architecture](public/diagrams/03_container_diagram.jpg)
+![Container Architecture](diagrams/03_container_diagram.png)
 
 ### 4. Component Architecture (C4 Level 3)
-![Component Architecture](public/diagrams/04_component_diagram.jpg)
+![Component Architecture](diagrams/04_component_diagram.png)
 
 ### 5. Deployment Infrastructure (AWS Kubernetes)
-![Deployment Infrastructure](public/diagrams/05_deployment_diagram.jpg)
+![Deployment Infrastructure](diagrams/05_deployment_diagram.png)
 
 ### 6. Relational Database ER Diagram
-![Database ER Diagram](public/diagrams/06_er_diagram.jpg)
+![Database ER Diagram](diagrams/06_er_diagram.png)
+
+### 7. Domain Model Class Diagram
+![Class Diagram](diagrams/07_class_diagram.png)
+
+### 8. Flash Sale Purchase Sequence Diagram
+![Purchase Sequence Diagram](diagrams/08_purchase_sequence_diagram.png)
+
+### 9. Multi-Strategy Payment & Circuit Breaker Sequence Diagram
+![Payment Sequence Diagram](diagrams/09_payment_sequence_diagram.png)
+
+### 10. Order Saga & Compensation Sequence Diagram
+![Order Sequence Diagram](diagrams/10_order_sequence_diagram.png)
+
+### 11. Inventory & Order State Diagram
+![State Diagram](diagrams/11_state_diagram.png)
 
 ---
 
