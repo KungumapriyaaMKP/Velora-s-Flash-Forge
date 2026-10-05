@@ -36,7 +36,21 @@ CREATE TABLE IF NOT EXISTS inventory (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. CUSTOMER TABLE
+-- 4. USERS TABLE (AUTHENTICATION & AUTHORIZATION)
+CREATE TABLE IF NOT EXISTS users (
+    user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    full_name VARCHAR(150) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    salt VARCHAR(255) NOT NULL,
+    role VARCHAR(30) NOT NULL DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'merchant')),
+    failed_login_attempts INT NOT NULL DEFAULT 0,
+    locked_until TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4B. CUSTOMER TABLE
 CREATE TABLE IF NOT EXISTS customers (
     customer_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     full_name VARCHAR(150) NOT NULL,

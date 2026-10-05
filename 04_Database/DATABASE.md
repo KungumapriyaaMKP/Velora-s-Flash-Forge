@@ -25,6 +25,20 @@ erDiagram
     ORDER ||--o| SHIPMENT : fulfilled_by
     CUSTOMER ||--o{ NOTIFICATION : receives
 
+    USER ||--o| CUSTOMER : maps_to
+
+    USER {
+        uuid user_id PK
+        string full_name
+        string email UK
+        string password_hash
+        string salt
+        string role
+        int failed_login_attempts
+        timestamp locked_until
+        timestamp created_at
+    }
+
     CUSTOMER {
         uuid customer_id PK
         string full_name

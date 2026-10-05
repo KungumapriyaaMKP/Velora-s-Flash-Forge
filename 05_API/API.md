@@ -2,6 +2,41 @@
 
 ## 1. REST API Specifications
 
+### 1.0 User Authentication Endpoints (AuthN & AuthZ)
+
+#### A. User Registration (`POST /api/auth/signup`)
+- **Request Body**:
+  ```json
+  {
+    "fullName": "Alex Morgan",
+    "email": "alex@velora.io",
+    "password": "Velora@SecurePass2026!",
+    "role": "customer"
+  }
+  ```
+- **Responses**:
+  - `201 Created`: Returns user profile and session token.
+  - `400 Bad Request`: Password fails security policy or duplicate email exists.
+
+#### B. User Login (`POST /api/auth/login`)
+- **Request Body**:
+  ```json
+  {
+    "email": "alex@velora.io",
+    "password": "Velora@SecurePass2026!"
+  }
+  ```
+- **Responses**:
+  - `200 OK`: Returns authenticated user & JWT cookie.
+  - `401 Unauthorized`: Invalid credentials. Returns remaining allowed attempts.
+  - `423 Locked`: Account locked due to 5 failed attempts (15-minute lockout mutex).
+
+#### C. Session Verification (`GET /api/auth/me`)
+- **Headers**: `Authorization: Bearer <TOKEN>` or `velora_auth_token` Cookie.
+- **Responses**:
+  - `200 OK`: Returns current user details and role.
+  - `401 Unauthorized`: Invalid or expired session token.
+
 ### 1.1 Reserve Inventory Endpoint
 - **HTTP Method**: `POST`
 - **Endpoint**: `/api/v1/reservations`
