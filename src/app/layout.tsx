@@ -1,9 +1,20 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import { Playfair_Display, Montserrat } from 'next/font/google';
+
+const playfair = Playfair_Display({ 
+  subsets: ['latin'], 
+  variable: '--font-playfair' 
+});
+
+const montserrat = Montserrat({ 
+  subsets: ['latin'], 
+  variable: '--font-montserrat' 
+});
 
 export const metadata: Metadata = {
-  title: "Velora's Flash Forge — High-Scale E-Commerce Flash Sale Platform",
-  description: 'System Design Hackathon Blueprint & High-Concurrency Simulator (10,000 Users vs 100 Units)',
+  title: 'Velora Cosmetics',
+  description: 'Limited Edition Flash Drops',
 };
 
 export default function RootLayout({
@@ -12,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="bg-slate-950 text-slate-100 antialiased selection:bg-cyan-500 selection:text-slate-950">
+    <html lang="en" className={`${playfair.variable} ${montserrat.variable}`}>
+      <body className={`${montserrat.className} bg-[#fafafa] text-stone-800 antialiased selection:bg-stone-900 selection:text-white`}>
         {children}
       </body>
     </html>
