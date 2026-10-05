@@ -9,7 +9,7 @@
 
 The System Context Diagram shows how customers interact with **Velora's Flash Forge** and external 3rd-party services (Stripe Payment Gateway, FedEx Logistics, Twilio Notifications).
 
-![System Context Diagram](../diagrams/01_system_context_diagram.jpg)
+![System Context Diagram](../diagrams/01_system_context_diagram.png)
 
 ```mermaid
 graph TD
@@ -33,9 +33,9 @@ graph TD
 
 ## 2. Container / Service Architecture (C4 Level 2)
 
-![HLD System Architecture](../diagrams/02_hld_architecture.jpg)
+![HLD System Architecture](../diagrams/02_hld_architecture.png)
 
-![C4 Container Architecture](../diagrams/03_container_diagram.jpg)
+![C4 Container Architecture](../diagrams/03_container_diagram.png)
 
 ```mermaid
 graph TB
@@ -88,7 +88,7 @@ graph TB
 
 ## 3. Component Diagram for Critical Services (C4 Level 3)
 
-![Microservices Component Architecture](../diagrams/04_component_diagram.jpg)
+![Microservices Component Architecture](../diagrams/04_component_diagram.png)
 
 ### 3.1 Inventory & Reservation Service Internal Components
 ```mermaid
@@ -113,7 +113,7 @@ graph LR
 
 ## 4. Deployment Diagram (AWS Kubernetes Infrastructure)
 
-![Kubernetes Deployment Infrastructure](../diagrams/05_deployment_diagram.jpg)
+![Kubernetes Deployment Infrastructure](../diagrams/05_deployment_diagram.png)
 
 ---
 

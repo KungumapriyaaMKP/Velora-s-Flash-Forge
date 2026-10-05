@@ -7,7 +7,7 @@
 
 ## 1. Relational Entity-Relationship (ER) Diagram
 
-![Database ER Diagram](../diagrams/06_er_diagram.jpg)
+![Database ER Diagram](../diagrams/06_er_diagram.png)
 
 ```mermaid
 erDiagram

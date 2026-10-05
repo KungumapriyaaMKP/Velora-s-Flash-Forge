@@ -7,7 +7,7 @@
 
 ## 1. Object-Oriented Class Diagram (Core Domain Modules)
 
-![UML Class Diagram](../diagrams/07_class_diagram.svg)
+![UML Class Diagram](../diagrams/07_class_diagram.png)
 
 ```mermaid
 classDiagram
@@ -83,7 +83,7 @@ classDiagram
 
 ## 2. Sequence Diagram 1: Flash Sale Purchase & Reservation Flow
 
-![Purchase Sequence Diagram](../diagrams/08_purchase_sequence_diagram.svg)
+![Purchase Sequence Diagram](../diagrams/08_purchase_sequence_diagram.png)
 
 ```mermaid
 sequenceDiagram
@@ -113,7 +113,7 @@ sequenceDiagram
 
 ## 3. Sequence Diagram 2: Payment Processing & Safe Idempotency Flow
 
-![Payment Sequence Diagram](../diagrams/09_payment_sequence_diagram.svg)
+![Payment Sequence Diagram](../diagrams/09_payment_sequence_diagram.png)
 
 ```mermaid
 sequenceDiagram
@@ -159,7 +159,7 @@ sequenceDiagram
 
 ## 4. Sequence Diagram 3: Asynchronous Order Creation & Outage Recovery (30s Outage Scenario)
 
-![Order Sequence Diagram](../diagrams/10_order_sequence_diagram.svg)
+![Order Sequence Diagram](../diagrams/10_order_sequence_diagram.png)
 
 ```mermaid
 sequenceDiagram
@@ -189,7 +189,7 @@ sequenceDiagram
 
 ## 5. State Diagrams
 
-![Order and Reservation State Diagram](../diagrams/11_state_diagram.svg)
+![Order and Reservation State Diagram](../diagrams/11_state_diagram.png)
 
 ```mermaid
 stateDiagram-v2
